@@ -10,10 +10,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,7 +35,6 @@ public class MainActivity extends ActionBarActivity {
     private ListAdapter adapter;
     private List<String> addList = new ArrayList<String>();
     private int total = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,18 +44,46 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initData() {
-        User angelbaby = new User("angelbaby",R.mipmap.a1);
-        User tangyan = new User("唐嫣",R.mipmap.a2);
-        User zhaoliying = new User("赵丽颖",R.mipmap.a3);
-        User gaoyuanyuan = new User("高圆圆",R.mipmap.a4);
-        User cat = new User("一只猫",R.mipmap.a5);
+        User angelbaby = new User("0",R.mipmap.a1,0);
+        User tangyan = new User("1",R.mipmap.a2,0);
+        User zhaoliying = new User("2",R.mipmap.a3,0);
+        User gaoyuanyuan = new User("3",R.mipmap.a4,0);
+        User cat = new User("4",R.mipmap.a5,0);
+        User cat1 = new User("5",R.mipmap.a5,0);
+        User cat2 = new User("6",R.mipmap.a5,0);
+        User cat3 = new User("7",R.mipmap.a5,0);
+        User cat4 = new User("8",R.mipmap.a5,0);
+        User cat5 = new User("9",R.mipmap.a5,0);
+        User cat6 = new User("10",R.mipmap.a5,0);
+        User cat7 = new User("11",R.mipmap.a5,0);
+        User cat8 = new User("12",R.mipmap.a5,0);
+        User cat9 = new User("13",R.mipmap.a5,0);
+        User cat10 = new User("14",R.mipmap.a5,0);
+        User cat11 = new User("15",R.mipmap.a5,0);
+        User cat12 = new User("16",R.mipmap.a5,0);
+
+
         allUserList = new ArrayList<User>();
         allUserList.add(angelbaby);
         allUserList.add(tangyan);
         allUserList.add(zhaoliying);
         allUserList.add(gaoyuanyuan);
         allUserList.add(cat);
+        allUserList.add(cat1);
+        allUserList.add(cat2);
+        allUserList.add(cat3);
+        allUserList.add(cat4);
+        allUserList.add(cat5);
+        allUserList.add(cat6);
+        allUserList.add(cat7);
+        allUserList.add(cat8);
+        allUserList.add(cat9);
+        allUserList.add(cat10);
+        allUserList.add(cat11);
+        allUserList.add(cat12);
+
         adapter = new ListAdapter(MainActivity.this,allUserList);
+
         listView.setAdapter(adapter);
 
         //搜索栏搜索
@@ -92,18 +117,6 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(final AdapterView<?> parent, View view,
-                                    final int position, long id) {
-                final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
-                checkBox.toggle();
-            }
-        });
-
-
     }
 
     private void initView() {
@@ -157,6 +170,7 @@ public class MainActivity extends ActionBarActivity {
             if (iv_search.getVisibility() == View.GONE) {
                 iv_search.setVisibility(View.VISIBLE);
             }
+            tv_checked.setText("确定");
         }
     }
 
@@ -167,7 +181,8 @@ public class MainActivity extends ActionBarActivity {
 
         private LayoutInflater layoutInflater;
         private Context context;
-        private List<User> list = new ArrayList<User>();
+        private List<User> list = null;
+
 
         public ListAdapter(Context context,List<User> list){
             this.context = context;
@@ -181,7 +196,7 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public User getItem(int position) {
-            return list.get(position);
+            return (User) list.get(position);
         }
 
         @Override
@@ -192,45 +207,67 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+            final int index = position;
             User user = getItem(position);
-            ViewHolder viewHolder = null;
+             ViewHolder viewHolder = null;
             if (convertView == null) {
                 viewHolder = new ViewHolder();
                 convertView = LayoutInflater.from(context).inflate(R.layout.listitem,null);
                 viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imageview);
                 viewHolder.textView = (TextView) convertView.findViewById(R.id.textview);
-                final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
-                final ImageView imageView = (ImageView) convertView.findViewById(R.id.imageview);
-                if (addList != null && addList.contains(user.getName())) {
-                    checkBox.setChecked(true);
-                }
-                if (checkBox != null){
-                    checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
-                                Bitmap bitmap = null;
-                                bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                                showCheckImage(bitmap, list.get(position));
-                            } else {
-                                // 用户显示在滑动栏删除
-                                deleteImage(list.get(position));
-                            }
-                        }
-                    });
-                }
+                viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
+                viewHolder.layout = (LinearLayout) convertView.findViewById(R.id.layout);
                 convertView.setTag(viewHolder);
             }else {
                 viewHolder = (ViewHolder) convertView.getTag();
+            }
+            final ImageView imageView = (ImageView) convertView.findViewById(R.id.imageview);
+            viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (list.get(index).type == User.TYPE_CHECKED){
+                        list.get(index).type = User.TYPE_NOCHECKED;
+                        deleteImage(list.get(index));
+                    } else {
+                        (list.get(index)).type = User.TYPE_CHECKED;
+                        Bitmap bitmap = null;
+                        bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                        showCheckImage(bitmap, list.get(index));
+                    }
+                }
+            });
+
+            final ViewHolder finalViewHolder = viewHolder;
+            viewHolder.layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (list.get(index).type == User.TYPE_CHECKED){
+                        list.get(index).type = User.TYPE_NOCHECKED;
+                        deleteImage(list.get(index));
+                        finalViewHolder.checkBox.setChecked(false);
+                    } else {
+                        (list.get(index)).type = User.TYPE_CHECKED;
+                        Bitmap bitmap = null;
+                        bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                        showCheckImage(bitmap, list.get(index));
+                        finalViewHolder.checkBox.setChecked(true);
+                    }
+                }
+            });
+            if(list.get(index).type == User.TYPE_CHECKED){
+                viewHolder.checkBox.setChecked(true);
+            }else{
+                viewHolder.checkBox.setChecked(false);
             }
             viewHolder.imageView.setImageResource(user.getHeader());
             viewHolder.textView.setText(user.getName());
             return convertView;
         }
-
-        class ViewHolder {
-            ImageView imageView;
-            TextView textView;
-        }
+    }
+    private class ViewHolder {
+        ImageView imageView;
+        TextView textView;
+        CheckBox checkBox;
+        LinearLayout layout;
     }
 }

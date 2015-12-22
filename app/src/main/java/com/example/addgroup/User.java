@@ -5,12 +5,17 @@ package com.example.addgroup;
  */
 public class User {
 
-    private String name;
-    private int header;
+    public static final int TYPE_CHECKED = 1;
+    public static final int TYPE_NOCHECKED = 0;
 
-    public User(String name, int header) {
+    public String name;
+    public int header;
+    public int type;
+
+    public User(String name, int header,int type) {
         this.name = name;
         this.header = header;
+        this.type = type;
     }
 
     public String getName() {
